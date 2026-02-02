@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Neo-North Star | Anno Domini 1826</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=UnifrakturMaguntia&family=IM+Fell+English+SC&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --paper-base: #e8dfcc;
+    --paper-grain: #dfd4bb;
+    --ink: #2b2b2b;
+    --ink-muted: rgba(43,43,43,0.7);
+}
+
+body {
+    background-color: var(--paper-base);
+    background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+    color: var(--ink);
+    font-family: 'Libre Baskerville', serif;
+    line-height: 1.45;
+}
+
+.newspaper-header {
+    border-bottom: 5px solid var(--ink);
+    border-top: 5px solid var(--ink);
+    padding: 10px 0;
+    margin-bottom: 20px;
+}
+
+.title-main {
+    font-family: 'IM Fell English SC', serif;
+    letter-spacing: -1px;
+}
+
+.column-divider {
+    border-right: 1px solid rgba(43,43,43,0.25);
+}
+
+.drop-cap::first-letter {
+    float: left;
+    font-family: 'UnifrakturMaguntia', cursive;
+    font-size: 4.5rem;
+    line-height: 0.8;
+    padding-right: 8px;
+    color: #000;
+}
+
+.woodblock-btn {
+    border: 2px solid var(--ink);
+    padding: 5px 10px;
+    font-family: 'IM Fell English SC', serif;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.woodblock-btn:hover {
+    background: var(--ink);
+    color: var(--paper-base);
+}
+
+.section-rule {
+    border-top: 1px solid var(--ink);
+    margin: 12px 0;
+}
+
+h2, h3 {
+    font-family: 'IM Fell English SC', serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.ads-box {
+    background-color: rgba(0,0,0,0.03);
+    border: 1px dashed var(--ink);
+}
+
+/* HIERARCHY TUNING — NO REMOVALS */
+.sidebar {
+    color: var(--ink-muted);
+    font-size: 0.75rem;
+}
+
+.main-article {
+    padding: 0 1.25rem;
+}
+
+/* INTERACTION */
+.continued {
+    display: none;
+}
+
+.continue-link {
+    cursor: pointer;
+    font-style: italic;
+    text-decoration: underline;
+}
+
+.pull-quote {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 1.25rem;
+    border-left: 4px solid var(--ink);
+    padding-left: 12px;
+    margin: 20px 0;
+    opacity: 0;
+    transform: translateX(-15px);
+    transition: all 0.6s ease;
+}
+
+.pull-quote.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Engraving-style images */
+.paper-image {
+  width: 100%;
+  max-width: 260px;
+  display: block;
+  margin: 0.75rem auto;
+  border: 1px solid #000;
+  padding: 4px;
+  background: #fdfaf4;
+  filter: grayscale(100%) contrast(1.05);
+}
+
+.paper-image.large {
+  max-width: 340px;
+}
+
+.image-caption {
+  font-size: 0.7rem;
+  font-style: italic;
+  text-align: center;
+  margin-top: 0.25rem;
+  opacity: 0.75;
+}
+
+/* Float helpers for column layout */
+.float-left {
+  float: left;
+  margin: 0.5rem 0.75rem 0.5rem 0;
+}
+
+.float-right {
+  float: right;
+  margin: 0.5rem 0 0.5rem 0.75rem;
+}
+
+/* Clear floats inside articles */
+.article::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+</style>
+</head>
+
+<body class="p-2 md:p-10">
+
+<div class="max-w-5xl mx-auto border-2 border-black p-4 bg-opacity-50">
+
+<!-- TOP METADATA -->
+<div class="flex justify-between text-sm italic font-bold border-b border-black mb-1">
+    <span>Price: Two Cents</span>
+    <span class="uppercase tracking-widest">Digital Edition for the Masses</span>
+    <span>Rochester, N.Y.</span>
+</div>
+
+<!-- MASTHEAD -->
+<header class="text-center mb-6">
+    <h1 id="masthead" class="title-main text-6xl md:text-9xl mb-2">The Neo-North Star</h1>
+
+    <div class="newspaper-header flex flex-col md:flex-row justify-between items-center px-4 uppercase text-xs font-bold">
+        <div class="hidden md:block">Volume XVIII</div>
+        <div id="rotatingQuote" class="text-xl italic font-serif py-1"></div>
+        <div id="dynamicDate"></div>
+    </div>
+</header>
+
+<!-- MAIN GRID -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+<!-- LEFT COLUMN -->
+<div class="md:col-span-1 column-divider pr-4 sidebar">
+<section class="mb-8">
+<h2 class="text-xl font-bold mb-2 border-b border-black">Anti-Slavery Alert</h2>
+<p class="text-sm italic mb-2">From the Encrypted Ledger of Mr. Douglass:</p>
+<p id="dailyBlurb" class="text-xs mb-4"></p>
+<a href="#" class="woodblock-btn text-xs">View the Map</a>
+</section>
+
+<div class="section-rule"></div>
+
+<section class="mb-8">
+<h2 class="text-xl font-bold mb-2 border-b border-black">Women's Rights</h2>
+<p class="text-xs mb-4">How ya doin'?</p>
+<a href="#" class="woodblock-btn text-xs">Join the Caucus</a>
+</section>
+
+<div class="ads-box p-3 mt-4">
+<h4 class="text-xs font-bold text-center underline mb-2">WANTED</h4>
+<p class="text-[10px] italic">
+Brave souls to distribute pamphlets. Must be literate and of sound moral character.
+</p>
+</div>
+</div>
+
+<!-- CENTER COLUMN -->
+<div class="md:col-span-2 column-divider main-article">
+<article>
+<h2 class="text-3xl md:text-4xl text-center mb-4 leading-tight">
+THE THIRD AWAKENING:<br>
+<span class="italic">A Digital Revival of the American Soul</span>
+</h2>
+
+
+
+<p class="drop-cap text-sm md:text-base mb-4 text-justify">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in feugiat lectus.
+</p>
+
+<div class="pull-quote" id="pullQuote">
+“Reform is not inherited. It is rebuilt.”
+</div>
+
+<p class="text-sm md:text-base mb-4 text-justify">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in feugiat lectus.
+</p>
+
+<span id="continueToggle" class="continue-link text-sm">
+Continued on Page II
+</span>
+
+<div id="continuedText" class="continued mt-4">
+<p class="text-sm md:text-base text-justify">
+Here the argument deepens. Reform requires repetition, not novelty.
+</p>
+</div>
+</article>
+</div>
+
+<!-- RIGHT COLUMN -->
+<div class="md:col-span-1 pl-4 sidebar">
+<section class="mb-8">
+<h2 class="text-xl font-bold mb-2 border-b border-black">Transcendental</h2>
+<p class="text-xs mb-4">Mr. Thoreau has unplugged. Trust.</p>
+<a href="#" class="woodblock-btn text-xs">Listen to the Podcast</a>
+</section>
+
+<div class="section-rule"></div>
+
+<section class="mb-8">
+<h2 class="text-xl font-bold mb-2 border-b border-black">Utopian Living</h2>
+<p class="text-xs mb-4">Come live in our utopian town gang!</p>
+<a href="#" class="woodblock-btn text-xs">Apply for Residency</a>
+</section>
+
+<div class="ads-box p-3 border-double border-2 border-black">
+<h4 class="text-xs font-bold text-center mb-1 uppercase">Merchandise</h4>
+<p class="text-[10px] mb-2">
+"Sojourner Truth" Totes - $2.00<br>
+"Garrison" Stickers - 50¢
+</p>
+</div>
+</div>
+
+</div>
+
+<footer class="mt-10 pt-4 border-t-2 border-black text-center">
+<p class="text-[9px] italic">
+Printed on recycled parchment and delivered via the electric ether.
+</p>
+</footer>
+
+</div>
+
+<script>
+/* Typing Animation (UNCHANGED) */
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const titleEl = document.getElementById("masthead");
+const fullText = titleEl.textContent;
+
+if (!prefersReducedMotion) {
+    titleEl.textContent = "";
+    let i = 0;
+    const typeInterval = setInterval(() => {
+        titleEl.textContent += fullText[i];
+        i++;
+        if (i >= fullText.length) clearInterval(typeInterval);
+    }, 180);
+}
+
+/* Fake Date */
+const dateEl = document.getElementById("dynamicDate");
+const fakeDate = new Date();
+fakeDate.setDate(fakeDate.getDate() + 18200);
+dateEl.textContent = fakeDate.toDateString();
+
+/* Rotating Quote */
+const quotes = [
+    "Right has no gender; truth has no color",
+    "Agitate. Educate. Organize.",
+    "Silence is consent, neatly dressed"
+];
+document.getElementById("rotatingQuote").textContent =
+quotes[Math.floor(Math.random() * quotes.length)];
+
+/* Daily Sidebar Blurb */
+const blurbs = [
+    "'Sup gang? 'Sup abolitionists?",
+    "Pamphlets circulated before dawn.",
+    "Presses halted. Printing resumed."
+];
+document.getElementById("dailyBlurb").textContent =
+blurbs[new Date().getDate() % blurbs.length];
+
+/* Continued Section */
+document.getElementById("continueToggle").onclick = () => {
+    document.getElementById("continuedText").style.display = "block";
+    document.getElementById("continueToggle").style.display = "none";
+};
+
+/* Pull Quote Reveal */
+const pq = document.getElementById("pullQuote");
+window.addEventListener("scroll", () => {
+    if (pq.getBoundingClientRect().top < window.innerHeight - 100) {
+        pq.classList.add("visible");
+    }
+});
+</script>
+
+</body>
+</html>
